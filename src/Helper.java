@@ -17,8 +17,8 @@ public class Helper {
         // y == 0 will cause a divide-by-zero exception
         if (x.equals(ZERO) || x.equals(ONE)) {
             return x;
-        } // end if
-        BigInteger two = BigInteger.valueOf(2L);
+        }
+        BigInteger two = BigInteger.valueOf(2);
         BigInteger y;
         // starting with y = x / 2 avoids magnitude issues with x squared
         for (y = x.divide(two);
@@ -96,13 +96,16 @@ public class Helper {
         }
 
         BigInteger forIndex(BigInteger index) {
+            long start = System.currentTimeMillis();
             if (index.equals(ZERO)) {
                 return ZERO;
             }
             assert stateIndex.compareTo(index) <= 0;
-            while (stateIndex.compareTo(index) < 0) {
+            int toIncrement = index.subtract(stateIndex).intValueExact();
+            for (int i = 0; i < toIncrement; i++) {
                 increment();
             }
+            System.out.printf("LucaGen.forIndex: %s computed in %s sec.\n", index, (System.currentTimeMillis() - start) / 1000.0);
             return n;
         }
 
@@ -126,6 +129,7 @@ public class Helper {
     public static BigInteger lucaNumbers[] = {ZERO, ONE};
 
     static BigInteger luca(BigInteger n, int Q, int P) {
+        System.out.println("luca n: " + n);
         if (n.equals(ZERO) || n.equals(ONE)) {
             return n;
         }
