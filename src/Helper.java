@@ -50,72 +50,12 @@ public class Helper {
         return res;
     }
 
-    /*static int p(int n){
-        int[] mass = decomposition(n);
-        int res;
-        int F=1;
-        for (int i=0; i<mass.length; i++){
-            res=mass[i];
-            while (i<mass.length-1 && mass[i]==mass[i+1] ){
-                i++;
-            }
-
-            if (i<mass.length-1){
-                while(i<mass.length && mass[i]!=0){
-                    F*=mass[i];
-                    i++;
-                }
-            }
-
-            if (gcd(res,F)==1){
-                return res;
-            }
-        }
-        return 0;
-    }*/
-
-    static int pow(int a, int k) {
-        int res = 1;
-        for (int i = 1; i <= k; i++) {
-            res *= a;
-        }
-        return res;
-    }
-
-    static int gcd(int p, int q) {
-        if (q == 0) {
-            return p;
-        }
-        return gcd(q, p % q);
-    }
-
     static BigInteger gcd(BigInteger p, BigInteger q) {
         if (q.equals(BigInteger.ZERO)) {
             return p;
         }
         return gcd(q, p.mod(q));
     }
-
-    /*static int jacobiSymbol(int D, int N){
-        int[] mass = decomposition(D);
-        int i=0;
-        int res=1;
-        while (i<mass.length-1 && mass[i]>0) {
-            if (mass[i]==mass[i+1]){
-                mass[i]=mass[i+1]=0;
-                i=i+2;
-            }
-            else {
-                i=i+1;
-            }
-        }
-        for (int k=0;k<mass.length;k++){
-            if (mass[k]!=0){
-                res*=(pow(mass[k],(N-1)/2)%N);
-            }
-        }
-        return res%N;
-    }*/
 
     static int jacobiSymbol(BigInteger D, BigInteger N) {
         int flag = 1;
@@ -150,21 +90,6 @@ public class Helper {
         }
         return rez;
     }
-
-    /*static BigInteger luca(int n, int P, int Q){
-        if (n==0){
-            return BigInteger.ZERO;
-        }
-        if (n==1){
-            return BigInteger.ONE;
-        }
-        if (n==2){
-            return BigInteger.valueOf(P);
-        }
-        BigInteger res=luca(n-1,P,Q).multiply(BigInteger.valueOf(P)).subtract(luca(n-2,P,Q).multiply(BigInteger.valueOf(Q)));
-        lucaNumbers[n]=res;
-        return res;
-    }*/
 
     static int first = 0;
     static int last = 1;
