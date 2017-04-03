@@ -1,5 +1,8 @@
 import java.math.BigInteger;
 
+import static java.math.BigInteger.ONE;
+import static java.math.BigInteger.ZERO;
+
 /**
  * Created by USER on 08.03.2017.
  */
@@ -14,28 +17,31 @@ public class Main {
         }
         BigInteger currentPrime = BigInteger.valueOf(3);
         int currentPrimeIndex = 2;
-        BigInteger nextPrime = BigInteger.ZERO;
-        BigInteger p = BigInteger.ZERO;
+        BigInteger nextPrime = ZERO;
+        BigInteger p = ZERO;
+
+        Helper.LucaGen lucaGen = new Helper.LucaGen(P, Q);
 
         //searching for the next candidate
         while (currentPrimeIndex < 20) {
-            for (BigInteger r = BigInteger.ONE; r.compareTo(currentPrime.subtract(BigInteger.ONE)) <= 0; r = r.add(BigInteger.ONE)) {
+            for (BigInteger r = ONE; r.compareTo(currentPrime.subtract(ONE)) <= 0; r = r.add(ONE)) {
                 // nextPrime = 2 * r * currentPrime + 1
-                nextPrime = BigInteger.valueOf(2).multiply(r).multiply(currentPrime).add(BigInteger.ONE);
+                nextPrime = BigInteger.valueOf(2).multiply(r).multiply(currentPrime).add(ONE);
                 if (Helper.jacobiSymbol(BigInteger.valueOf(D), nextPrime) != -1) {
                     System.out.println(nextPrime + " is not primary: (1) jacobiSymbol != -1");
                     continue;
                 }
-                if (!Helper.gcd(nextPrime, BigInteger.valueOf(P * Q * D)).equals(BigInteger.ONE)) {
+                if (!nextPrime.gcd(BigInteger.valueOf(P * Q * D)).equals(ONE)) {
                     System.out.println(nextPrime + " is not primary: (2) gcd(n, PQD) != 1");
                     continue;
                 }
-                if (!Helper.luca(nextPrime.add(BigInteger.ONE), P, Q).mod(nextPrime).equals(BigInteger.ZERO)) {
+                BigInteger luca_n_plus_1 = lucaGen.forIndex(nextPrime.add(ONE)); // Helper.luca(nextPrime.add(ONE), P, Q);
+                if (!luca_n_plus_1.mod(nextPrime).equals(ZERO)) {
                     System.out.println(nextPrime + " is not primary: (3) luca(n + 1) % n != 0");
                     continue;
                 }
-                BigInteger luca_2r = Helper.luca(nextPrime.subtract(BigInteger.ONE).divide(currentPrime), P, Q);
-                if (!Helper.gcd(luca_2r, nextPrime).equals(BigInteger.ONE)) {
+                BigInteger luca_2r = Helper.luca(nextPrime.subtract(ONE).divide(currentPrime), P, Q);
+                if (!luca_2r.gcd(nextPrime).equals(ONE)) {
                     System.out.println(nextPrime + " is not primary: (4) gcd(luca(2r), n) != 1");
                     continue;
                 }

@@ -1,5 +1,8 @@
 import java.math.BigInteger;
 
+import static java.math.BigInteger.ONE;
+import static java.math.BigInteger.ZERO;
+
 /**
  * Created by USER on 19.03.2017.
  */
@@ -7,12 +10,12 @@ public class Helper {
 
     public static BigInteger bigIntSqRootFloor(BigInteger x)
             throws IllegalArgumentException {
-        if (x.compareTo(BigInteger.ZERO) < 0) {
+        if (x.compareTo(ZERO) < 0) {
             throw new IllegalArgumentException("Negative argument.");
         }
         // square roots of 0 and 1 are trivial and
         // y == 0 will cause a divide-by-zero exception
-        if (x.equals(BigInteger.ZERO) || x.equals(BigInteger.ONE)) {
+        if (x.equals(ZERO) || x.equals(ONE)) {
             return x;
         } // end if
         BigInteger two = BigInteger.valueOf(2L);
@@ -28,13 +31,13 @@ public class Helper {
     static BigInteger[] decomposition(BigInteger n) {
         BigInteger[] res = new BigInteger[1000];
         for (int i = 1; i < res.length; i++) {
-            res[i] = BigInteger.ZERO;
+            res[i] = ZERO;
         }
-        res[0] = BigInteger.ONE;
+        res[0] = ONE;
         int divisor = 2;
         int point = 0;
         while (n.compareTo(BigInteger.valueOf(2)) >= 0) {
-            while (!n.mod(BigInteger.valueOf(divisor)).equals(BigInteger.ZERO) && bigIntSqRootFloor(n).compareTo(BigInteger.valueOf(divisor)) >= 0) {
+            while (!n.mod(BigInteger.valueOf(divisor)).equals(ZERO) && bigIntSqRootFloor(n).compareTo(BigInteger.valueOf(divisor)) >= 0) {
                 divisor++;
             }
             if (bigIntSqRootFloor(n).compareTo(BigInteger.valueOf(divisor)) >= 0) {
@@ -50,22 +53,18 @@ public class Helper {
         return res;
     }
 
-    static BigInteger gcd(BigInteger p, BigInteger q) {
-        if (q.equals(BigInteger.ZERO)) {
-            return p;
-        }
-        return gcd(q, p.mod(q));
-    }
-
     static int jacobiSymbol(BigInteger D, BigInteger N) {
+        if (D.mod(N).equals(ZERO)) {
+            return 0;
+        }
         int flag = 1;
         int res = 1;
         BigInteger[] decomposition = decomposition(D);
-        if (D.equals(BigInteger.ONE)) {
+        if (D.equals(ONE)) {
             return 1;
         }
-        for (int i = 0; i < decomposition.length && decomposition[i].compareTo(BigInteger.ZERO) > 0; i++) {
-            if (decomposition[i].equals(BigInteger.ONE.negate())) {
+        for (int i = 0; i < decomposition.length && decomposition[i].compareTo(ZERO) > 0; i++) {
+            if (decomposition[i].equals(ONE.negate())) {
                 if (N.mod(BigInteger.valueOf(4)).equals(BigInteger.valueOf(3))) {
                     res *= -1;
                 }
@@ -83,21 +82,55 @@ public class Helper {
         return res;
     }
 
-    static int factorial(int n) {
-        int rez = 1;
-        for (int i = 1; i <= n; i++) {
-            rez *= i;
+    public static class LucaGen {
+        private final int P;
+        private final int Q;
+
+        private BigInteger pn = ZERO;
+        private BigInteger n = ONE;
+        private BigInteger stateIndex = ONE;
+
+        LucaGen(int P, int Q) {
+            this.P = P;
+            this.Q = Q;
         }
-        return rez;
+
+        BigInteger forIndex(BigInteger index) {
+            if (index.equals(ZERO)) {
+                return ZERO;
+            }
+            assert stateIndex.compareTo(index) <= 0;
+            while (stateIndex.compareTo(index) < 0) {
+                increment();
+            }
+            return n;
+        }
+
+        private void increment() {
+            BigInteger next = nextLuca(pn, n, Q, P);
+            pn = n;
+            n = next;
+            stateIndex = stateIndex.add(ONE);
+        }
+
+        private static BigInteger nextLuca(BigInteger pn, BigInteger n, int Q, int P) {
+            assert pn.compareTo(n) < 0;
+            return n.multiply(BigInteger.valueOf(P)).subtract(pn.multiply(BigInteger.valueOf(Q)));
+        }
     }
+
+
 
     static int first = 0;
     static int last = 1;
-    public static BigInteger lucaNumbers[] = {BigInteger.ZERO, BigInteger.ONE};
+    public static BigInteger lucaNumbers[] = {ZERO, ONE};
 
     static BigInteger luca(BigInteger n, int Q, int P) {
+        if (n.equals(ZERO) || n.equals(ONE)) {
+            return n;
+        }
         BigInteger temp;
-        BigInteger res = BigInteger.ONE;
+        BigInteger res = ONE;
         if (n.compareTo(BigInteger.valueOf(last + 1)) > 0) {
             for (int i = last + 1; n.compareTo(BigInteger.valueOf(i)) > 0; i++) {
                 temp = lucaNumbers[1].multiply(BigInteger.valueOf(P)).subtract(lucaNumbers[0].multiply(BigInteger.valueOf(Q)));
@@ -118,8 +151,8 @@ public class Helper {
             first++;
             last++;
         } else {
-            lucaNumbers[0] = BigInteger.ZERO;
-            lucaNumbers[1] = BigInteger.ONE;
+            lucaNumbers[0] = ZERO;
+            lucaNumbers[1] = ONE;
             first = 0;
             last = 1;
             for (int i = 2; n.compareTo(BigInteger.valueOf(i)) >= 0; i++) {
@@ -137,11 +170,5 @@ public class Helper {
         }
 
         return res;
-    }
-
-    //static BigInteger[] lucaNumbers = new BigInteger[1000];
-
-    static int cnk(int n, int k) {
-        return factorial(n) / (factorial(k) * factorial(n - k));
     }
 }
