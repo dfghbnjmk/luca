@@ -13,16 +13,16 @@ public class Irrational {
     BigInteger bAdditional;
     BigInteger bRoot;
 
-    Irrational(int additional, int integer, int root){
-        this.additional=additional;
-        this.integer=integer;
-        this.root=root;
+    Irrational(int additional, int integer, int root) {
+        this.additional = additional;
+        this.integer = integer;
+        this.root = root;
     }
 
-    Irrational(BigInteger additional, BigInteger integer, BigInteger root){
-        this.bAdditional=additional;
-        this.bInteger=integer;
-        this.bRoot=root;
+    Irrational(BigInteger additional, BigInteger integer, BigInteger root) {
+        this.bAdditional = additional;
+        this.bInteger = integer;
+        this.bRoot = root;
     }
 
     /*static public Irrational squareRoot(int D) {
@@ -52,52 +52,46 @@ public class Irrational {
         return alpha;
     }*/
 
-    static Irrational newtonFormula(Irrational alpha, int power){
-        Irrational res = new Irrational(0,0, alpha.root);
-        for (int k=0;k<=power;k++){
-            if (k%2==0){
-                res.additional+=Helper.cnk(power,k)*Helper.pow(alpha.additional,power-k)*Helper.pow(alpha.integer,k)*Helper.pow(alpha.root,k/2);
-            }
-            else {
-                res.integer+=Helper.cnk(power,k)*Helper.pow(alpha.additional,power-k)*Helper.pow(alpha.integer,k)*Helper.pow(alpha.root,(k-1)/2);
+    static Irrational newtonFormula(Irrational alpha, int power) {
+        Irrational res = new Irrational(0, 0, alpha.root);
+        for (int k = 0; k <= power; k++) {
+            if (k % 2 == 0) {
+                res.additional += Helper.cnk(power, k) * Helper.pow(alpha.additional, power - k) * Helper.pow(alpha.integer, k) * Helper.pow(alpha.root, k / 2);
+            } else {
+                res.integer += Helper.cnk(power, k) * Helper.pow(alpha.additional, power - k) * Helper.pow(alpha.integer, k) * Helper.pow(alpha.root, (k - 1) / 2);
             }
         }
         return res;
     }
 
     static Irrational dif(Irrational a, Irrational b) {
-        if (a.root==b.root){
-            Irrational res = new Irrational(a.additional-b.additional, a.integer-b.integer, a.root);
+        if (a.root == b.root) {
+            Irrational res = new Irrational(a.additional - b.additional, a.integer - b.integer, a.root);
             return res;
-        }
-        else return new Irrational(0,0,0);
+        } else return new Irrational(0, 0, 0);
     }
 
-    static int reduction(Irrational a, Irrational b){
-        if(a.integer>b.integer){
-            if(a.integer%b.integer==0){
-                if (a.additional/(a.integer/b.integer)==b.additional){
-                    if (a.additional==0){
-                        return (a.integer/b.integer);
+    static int reduction(Irrational a, Irrational b) {
+        if (a.integer > b.integer) {
+            if (a.integer % b.integer == 0) {
+                if (a.additional / (a.integer / b.integer) == b.additional) {
+                    if (a.additional == 0) {
+                        return (a.integer / b.integer);
+                    } else {
+                        return a.additional / (a.integer / b.integer);
                     }
-                    else {
-                        return a.additional/(a.integer/b.integer);
-                    }
-                }
-                else return 0;
-            }
-            else return 0;
-        }
-        else return 0;
+                } else return 0;
+            } else return 0;
+        } else return 0;
     }
 
-    static int lucaSequenceMember(Irrational alpha, Irrational beta, int n){
-        int res=0;
-        Irrational newAlpha=newtonFormula(alpha,n);
-        Irrational newBeta=newtonFormula(beta,n);
-        Irrational numerator=dif(newAlpha,newBeta);
-        Irrational denumerator=dif(alpha,beta);
-        res=reduction(numerator,denumerator);
+    static int lucaSequenceMember(Irrational alpha, Irrational beta, int n) {
+        int res = 0;
+        Irrational newAlpha = newtonFormula(alpha, n);
+        Irrational newBeta = newtonFormula(beta, n);
+        Irrational numerator = dif(newAlpha, newBeta);
+        Irrational denumerator = dif(alpha, beta);
+        res = reduction(numerator, denumerator);
         return res;
     }
 }
