@@ -10,7 +10,7 @@ public class Main {
         int Q = 6;
         int D = P * P - 4 * Q;
         if (D <= 0) {
-            System.out.println("Error! D<=0!");
+            System.out.println("Error! D <= 0!");
         }
         //defining array of primary numbers
         //int[] primary = new int[15];
@@ -21,8 +21,7 @@ public class Main {
         BigInteger nextPrime = BigInteger.ZERO;
         BigInteger p = BigInteger.ZERO;
         int count = 0;
-        //Irrational alpha=Irrational.equationRoot(P,Q,1);
-        //Irrational beta=Irrational.equationRoot(P,Q,-1);
+
         //searching for the next candidate
         while (currentPrimeIndex < 20) {
             for (BigInteger r = BigInteger.ONE; r.compareTo(currentPrime.subtract(BigInteger.ONE)) <= 0; r = r.add(BigInteger.ONE)) {
