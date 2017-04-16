@@ -175,4 +175,47 @@ public class Helper {
 
         return res;
     }
+
+    static int pow(int a, int n) {
+        if (n==0) {
+            return 1;
+        }
+        if (n%2==1){
+            return a*pow(a,n-1);
+        }
+        int b=pow(a,n/2);
+        return b*b;
+    }
+
+    static BigInteger[] multiplyMatrix(BigInteger[] A, BigInteger[] B){
+        BigInteger[] res = new BigInteger[4];
+        res[0]=A[0].multiply(B[0]).add(A[1].multiply(B[2]));
+        res[1]=A[0].multiply(B[1]).add(A[1].multiply(B[3]));
+        res[2]=A[2].multiply(B[0]).add(A[3].multiply(B[2]));
+        res[3]=A[2].multiply(B[1]).add(A[3].multiply(B[3]));
+        return res;
+    }
+
+    static BigInteger[] matrixPow(BigInteger[] A, BigInteger n) {
+        //if (n.equals(BigInteger.ONE)){
+        //    return A;
+        //}
+        BigInteger[] res = {BigInteger.ONE, BigInteger.ZERO, BigInteger.ZERO, BigInteger.ONE};
+        while (n.compareTo(BigInteger.ZERO)>0) {
+            if (n.mod(BigInteger.valueOf(2)).equals(BigInteger.ONE)) {
+                res=multiplyMatrix(res,A);
+            }
+            A = multiplyMatrix(A,A);
+            n=n.divide(BigInteger.valueOf(2));
+        }
+        return res;
+    }
+
+    static BigInteger luca(int P, int Q, BigInteger n) {
+        BigInteger res;
+        BigInteger[] A = {BigInteger.ZERO, BigInteger.valueOf(-Q), BigInteger.ONE, BigInteger.valueOf(P)};
+        A = matrixPow(A,n.subtract(BigInteger.ONE));
+        res=A[3];
+        return res;
+    }
 }
