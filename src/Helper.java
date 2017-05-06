@@ -218,4 +218,36 @@ public class Helper {
         res=A[3];
         return res;
     }
+
+    static BigInteger[] multiplyMatrixMod(BigInteger[] A, BigInteger[] B, BigInteger mod){
+        BigInteger[] res = new BigInteger[4];
+        res[0]=(A[0].multiply(B[0]).add(A[1].multiply(B[2]))).mod(mod);
+        res[1]=(A[0].multiply(B[1]).add(A[1].multiply(B[3]))).mod(mod);
+        res[2]=(A[2].multiply(B[0]).add(A[3].multiply(B[2]))).mod(mod);
+        res[3]=(A[2].multiply(B[1]).add(A[3].multiply(B[3]))).mod(mod);
+        return res;
+    }
+
+    static BigInteger[] matrixPowMod(BigInteger[] A, BigInteger n, BigInteger mod) {
+        //if (n.equals(BigInteger.ONE)){
+        //    return A;
+        //}
+        BigInteger[] res = {BigInteger.ONE, BigInteger.ZERO, BigInteger.ZERO, BigInteger.ONE};
+        while (n.compareTo(BigInteger.ZERO)>0) {
+            if (n.mod(BigInteger.valueOf(2)).equals(BigInteger.ONE)) {
+                res=multiplyMatrixMod(res,A,mod);
+            }
+            A = multiplyMatrixMod(A,A,mod);
+            n=n.divide(BigInteger.valueOf(2));
+        }
+        return res;
+    }
+
+    static BigInteger lucaMod(int P, int Q, BigInteger n) {
+        BigInteger res;
+        BigInteger[] A = {BigInteger.ZERO, BigInteger.valueOf(-Q), BigInteger.ONE, BigInteger.valueOf(P)};
+        A = matrixPowMod(A,n.subtract(BigInteger.ONE),n.subtract(BigInteger.ONE));
+        res=A[3];
+        return res;
+    }
 }

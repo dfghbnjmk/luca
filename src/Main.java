@@ -59,31 +59,39 @@ public class Main {
                 break;
             }
         }*/
-        while (currentPrimeIndex < 20) {
+        while (currentPrimeIndex < 50) {
             for (BigInteger r = ONE; r.compareTo(currentPrime.subtract(ONE)) <= 0; r = r.add(ONE)) {
                 // nextPrime = 2 * r * currentPrime + 1
-                BigInteger trial = BigInteger.valueOf(2).multiply(r).multiply(currentPrime).add(ONE);
+                BigInteger trial = BigInteger.valueOf(2).multiply(r).multiply(currentPrime).subtract(ONE);
                 if (Helper.jacobiSymbol(BigInteger.valueOf(D), trial) != -1) {
-                    System.out.println(trial + " is not primary: (1) jacobiSymbol != -1");
+                    //System.out.println(trial + " is not primary: (1) jacobiSymbol != -1");
                     continue;
                 }
                 if (!trial.gcd(BigInteger.valueOf(P * Q * D)).equals(ONE)) {
-                    System.out.println(trial + " is not primary: (2) gcd(n, PQD) != 1");
+                    //System.out.println(trial + " is not primary: (2) gcd(n, PQD) != 1");
                     continue;
                 }
-                BigInteger luca_n_plus_1 = Helper.luca(P,Q,trial.add(BigInteger.ONE));
+                /*BigInteger luca_n_plus_1 = Helper.luca(P,Q,trial.add(BigInteger.ONE));
                 if (!luca_n_plus_1.mod(trial).equals(ZERO)) {
                     System.out.println(trial + " is not primary: (3) luca(n + 1) % n != 0");
                     continue;
+                }*/
+                BigInteger luca_n_plus_1 = Helper.lucaMod(P,Q,trial.add(BigInteger.ONE));
+                if (!luca_n_plus_1.equals(ZERO)) {
+                    //System.out.println(trial + " is not primary: (3) luca(n + 1) % n != 0");
+                    continue;
                 }
-                BigInteger luca_2r = Helper.luca(P,Q,trial.subtract(ONE).divide(currentPrime));
+                BigInteger luca_2r = Helper.luca(P,Q,trial.add(ONE).divide(currentPrime));
                 if (!luca_2r.gcd(trial).equals(ONE)) {
-                    System.out.println(trial + " is not primary: (4) gcd(luca(2r), n) != 1");
+                    //System.out.println(trial + " is not primary: (4) gcd(luca(2r), n) != 1");
                     continue;
                 }
                 currentPrime = trial;
                 currentPrimeIndex++;
                 System.out.println(trial);
+                if (!trial.isProbablePrime(100)) {
+                    System.out.println("Number is composite!");
+                }
                 break;
             }
         }
